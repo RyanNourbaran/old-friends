@@ -24,17 +24,31 @@ db.connect(err => {
     console.log("My sql connected");
   }
 });
+// @GET @memories
+app.get("/memories/:id", (req, res) => {
+  const id = req.params.id;
+  db.query("SELECT * FROM memories where id = ?", id, (err, result) => {
+    if (err) return console.log(err);
+    else {
+      res.send(result);
+    }
+  });
+});
 
-// @New @POST @memory
-app.get("/new-memory", (req, res) => {
+// @New @POST @memories
+app.post("/memories", (req, res) => {
   //validate
-  const { error } = validateMemory(req.body.memory);
+  /*   const { error } = validateMemory(req.body.memory);
   if (error) return res.status(400).send(error.details[0].message);
+ */
 
   //SQL
-  post = { memory: `req.body.memory` };
-  let sql = "INSERT INTO memories ?";
-  db.query(sql, (err, result) => {
+  console.log(req.body);
+
+  post = { memory: "test memory" };
+  let sql = "INSERT INTO memories SET ?";
+
+  db.query(sql, req.body, (err, result) => {
     if (err) return console.log(err);
     console.log(result);
     res.send("memory inserted");
@@ -45,9 +59,8 @@ app.get("/new-memory", (req, res) => {
 function validateMemory(memory) {
   const schema = {
     memory: Joi.string()
-      .min(3)
       .required()
-      .allow(null)
+      .max(300)
   };
   return Joi.validate(memory, schema);
 }
