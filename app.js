@@ -24,14 +24,24 @@ db.connect(err => {
     console.log("My sql connected");
   }
 });
-
-// @GET @keywords
+// @GET @memories
 app.get("/memories/:id", (req, res) => {
   const id = req.params.id;
   db.query("SELECT * FROM memories where id = ?", id, (err, result) => {
     if (err) return console.log(err);
     else {
-      res.send(result[0].keywords.split(" "));
+      res.send(result);
+    }
+  });
+});
+
+// @GET @keywords
+app.get("/keywords/:id", (req, res) => {
+  const id = req.params.id;
+  db.query("SELECT * FROM memories where id = ?", id, (err, result) => {
+    if (err) return console.log(err);
+    else {
+      res.send(result[0].keywords);
     }
   });
 });
