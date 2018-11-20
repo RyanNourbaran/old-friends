@@ -24,13 +24,14 @@ db.connect(err => {
     console.log("My sql connected");
   }
 });
-// @GET @memories
+
+// @GET @keywords
 app.get("/memories/:id", (req, res) => {
   const id = req.params.id;
   db.query("SELECT * FROM memories where id = ?", id, (err, result) => {
     if (err) return console.log(err);
     else {
-      res.send(result);
+      res.send(result[0].keywords.split(" "));
     }
   });
 });
@@ -45,7 +46,6 @@ app.post("/memories", (req, res) => {
   //SQL
   console.log(req.body);
 
-  post = { memory: "test memory" };
   let sql = "INSERT INTO memories SET ?";
 
   db.query(sql, req.body, (err, result) => {
